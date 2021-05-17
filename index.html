@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js app</title>
+    <style>
+        body {
+            margin: 0;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="base.css">
+
+</head>
+
+<body>
+    <script src="js/three.js"></script>
+    <script src="js/gltfLoader.js"></script>
+    <script src="js/orbitalControls.js"></script>
+    <script src="./math.js"></script>
+    <script src="./world.js"></script>
+    <script src="./player.js"></script>
+    <script src="./background.js"></script>
+
+    <script defer>
+        const _VS = `
+        varying vec3 vWorldPosition;
+        void main() {
+        vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+        vWorldPosition = worldPosition.xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        }`;
+
+        const _FS = `
+        uniform vec3 topColor;
+        uniform vec3 bottomColor;
+        uniform float offset;
+        uniform float exponent;
+        varying vec3 vWorldPosition;
+        void main() {
+        float h = normalize( vWorldPosition + offset ).y;
+        gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+        }`;
+
+        var gameStarted = false;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.gammaOutput = true;
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        const loader = new THREE.GLTFLoader();
+
+        this.controls = new OrbitControls(camera, renderer.domElement);
+
+        camera.position.set(-5, 5, 10);
+        camera.lookAt(8, 3, 0);
+
+        controls.update();
+
+        let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+        const helper = new THREE.DirectionalLightHelper(light, 5);
+        scene.add(helper);
+
+        light.position.set(0, 50, 0);
+        light.target.position.set(-40, 0, 60);
+        light.castShadow = true;
+        light.shadow.bias = -0.001;
+        light.shadow.mapSize.width = 4096;
+        light.shadow.mapSize.height = 4096;
+        light.shadow.camera.far = 200.0;
+        light.shadow.camera.near = 1.0;
+        light.shadow.camera.left = 50;
+        light.shadow.camera.right = -50;
+        light.shadow.camera.top = 50;
+        light.shadow.camera.bottom = -50;
+        scene.add(light);
+
+        light = new THREE.AmbientLight(0x404040, 0.4); // soft white light
+        scene.add(light);
+
+        scene.background = new THREE.Color(0x808080);
+        scene.fog = new THREE.FogExp2(0x89b2eb, 0.00125);
+
+        const texture_loader = new THREE.TextureLoader();
+
+        const loaded_texture = texture_loader.load('./resources/grass/grass.png');
+
+        loaded_texture.wrapS = THREE.RepeatWrapping;
+        loaded_texture.wrapT = THREE.RepeatWrapping;
+        loaded_texture.repeat.set(1000, 1000);
+
+        const grass_material = new THREE.MeshBasicMaterial({
+            map: loaded_texture,
+        });
+
+        const ground = new THREE.Mesh(
+            new THREE.PlaneGeometry(20000, 20000, 10, 10),
+            grass_material);
+
+        ground.castShadow = false;
+        ground.receiveShadow = true;
+        ground.rotation.x = -Math.PI / 2;
+        scene.add(ground);
+
+        const uniforms = {
+            topColor: { value: new THREE.Color(0x0077FF) },
+            bottomColor: { value: new THREE.Color(0x89b2eb) },
+            offset: { value: 33 },
+            exponent: { value: 0.6 }
+        };
+        const skyGeo = new THREE.SphereBufferGeometry(1000, 32, 15);
+        const skyMat = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: _VS,
+            fragmentShader: _FS,
+            side: THREE.BackSide,
+        });
+        scene.add(new THREE.Mesh(skyGeo, skyMat));
+
+        world = new w.WorldManager({ scene: scene });
+
+        player = new p.Player({ scene: scene, world: world });
+
+        background = new b.Background({ scene: scene });
+
+        this.gameOver = false;
+
+        camera.position.z = 5;
+
+        var deltaTime = 0;
+        var lastTime = 0;
+
+        const animate = function (time) {
+            requestAnimationFrame(animate);
+
+            controls.update();
+
+            deltaTime = (time - lastTime) * 0.001;
+            lastTime = time;
+
+            step(deltaTime);
+
+            renderer.render(scene, camera);
+        };
+
+        animate(0);
+
+        function step(timeElapsed) {
+            if (this.gameOver) {
+                return;
+            }
+
+            player.Update(timeElapsed);
+            world.Update(timeElapsed);
+            background.Update(timeElapsed);
+            if (player.gameOver && !this.gameOver) {
+                this.gameOver = true;
+                document.getElementById('game-over').classList.toggle('active');
+            }
+        }
+
+    </script>
+
+    <div class="container" id="container">
+        <div class="ui">
+            <div class="score-layout">
+                <div class="score-text" id="score-text">
+                    00000
+                </div>
+            </div>
+        </div>
+        <div class="ui">
+            <div class="game-over-layout" id="game-over">
+                <div class="game-over-text">GAME OVER</div>
+            </div>
+        </div>
+        <div class="ui">
+            <div class="game-menu-layout" id="game-menu">
+                <div class="game-menu-window">
+                    <img src="./raptor.png"></img>
+                    <h1>No internet</h1>
+                    <p>Try:</p>
+                    <li>Checking the network cables, modem, and router</li>
+                    <li>Reconnecting to Wi-Fi</li>
+                    <li>Running Windows Network Diagnostics</li>
+                    <p id="error">ERR_INTERNET_DISCONNECTED</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
