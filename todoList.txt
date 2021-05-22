@@ -1,17 +1,32 @@
+RESOURCES
+
+music -> https://www.bensound.com/
+sound-> https://freesound.org/
+
+TODO
+
+4.1 schimbi iarba X
+5. mai multe chestii mai rasfirate (padurice stanga dreapta)
+8. o perspectiva mai buna cand incepi
+11. mai multe feluri de iarba si de copaci X
+13. aranjez lumina
+
+16. se termina padurea si nu mai vine inapoi
+17. schimba numele in <head><title> X
+18. favicon X
+
+DONE
+
 1. umbre la chestii X
 2. garduri mai multe X
 3. garduri diferite random X
 4. iarba pe jos X
-4.1 schimbi iarba
-5. mai multe chestii mai rasfirate (padurice stanga dreapta)
-6. sa mori daca lovesti 5 garduri 
-7. game over afisat la final cu punctajul
-8. o perspectiva mai buna cand incepi
-9. space - sare; dreapta - walk; stanga - walkslow; cand moare- dead
-10. scorul si instructiunile de joc in dreapta undeva
-11. mai multe feluri de iarba si de copaci
+6. sa mori daca lovesti 5 garduri X
+7. game over afisat la final cu punctajul X
+
+9. space - sare; dreapta - walk; stanga - walkslow; cand moare- dead X
+10. scorul si instructiunile de joc in dreapta undeva X
 12. mai luminate chestiile X
-13. aranjez lumina
-14. mi-au disparut umbrele din nou
-15. se incarca foarte greu ca se citeste de multe ori
-16. se terina padurea si nu mai vine inapoi
+
+14. mi-au disparut umbrele din nou X
+15. se incarca foarte greu ca se citeste de multe ori X

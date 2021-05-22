@@ -128,6 +128,15 @@ var OrbitControls = function (object, domElement) {
     this.mouseMovementPan = function (event) {
         handleMouseMovePan(event);
     }
+    
+    this.mouseMovementDolly = function (event) {
+        handleMouseMoveDolly(event);
+    }
+
+    
+    this.mouseMovementRotate = function (event) {
+        handleMouseMoveRotate(event);
+    }
 
     // this method is exposed, but perhaps it would be better if we can make it private...
     this.update = function () {

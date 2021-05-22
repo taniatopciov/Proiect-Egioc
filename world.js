@@ -1,6 +1,6 @@
 w = (() => {
 
-  const START_POS = 100;
+  const START_POS = 70;
   const SEPARATION_DISTANCE = 20;
 
 
@@ -16,45 +16,34 @@ w = (() => {
     }
 
     LoadModel_() {
+      var gate = gatePool.getRandomAsset();
 
-    const assets = [
-    ['gate1.json', 5],
-    ['gate2.json', 5],
-    ['gate3.json', 5],
-    ['gate1.json', 5],
-    ['gate2.json', 5],
-    ['gate3.json', 5],
-    ];
+      if (!gate) {
+        return;
+      }
+      gate = gate.scene.clone();
+      gate.scale.setScalar(1);
 
-    const [asset, scale] = assets[math.rand_int(0, assets.length - 1)];
-    
-      const loader = new THREE.GLTFLoader();
-      loader.setPath('./resources/obstacles/');
-      loader.load(asset, (gate) => {
-        gate = gate.scene;
-        gate.scale.setScalar(1);
+      this.mesh = gate;
+      this.params_.scene.add(this.mesh);
 
-        this.mesh = gate;
-        this.params_.scene.add(this.mesh);
+      gate.traverse(c => {
+        if (c.geometry) {
+          c.geometry.computeBoundingBox();
+        }
 
-        gate.traverse(c => {
-          if (c.geometry) {
-            c.geometry.computeBoundingBox();
+        let materials = c.material;
+        if (!(c.material instanceof Array)) {
+          materials = [c.material];
+        }
+
+        for (let m of materials) {
+          if (m) {
+            m.specular = new THREE.Color(0x000000);
           }
-
-          let materials = c.material;
-          if (!(c.material instanceof Array)) {
-            materials = [c.material];
-          }
-  
-          for (let m of materials) {
-            if (m) {
-              m.specular = new THREE.Color(0x000000);
-            }
-          }    
-          c.castShadow = true;
-          c.receiveShadow = true;
-        });
+        }
+        c.castShadow = true;
+        c.receiveShadow = true;
       });
     }
 
@@ -77,9 +66,8 @@ w = (() => {
     constructor(params) {
       this.objects_ = [];
       this.unused_ = [];
-      this.speed_ = 12;
       this.params_ = params;
-      this.score_ = 0.0;
+      this.score = 0.0;
       this.scoreText_ = '00000';
       this.separationDistance_ = SEPARATION_DISTANCE;
     }
@@ -107,20 +95,18 @@ w = (() => {
       }
 
       obj.quaternion.setFromAxisAngle(
-          new THREE.Vector3(0, 1, 0), Math.PI / 2.0);
+        new THREE.Vector3(0, 1, 0), Math.PI / 2.0);
       obj.position.x = START_POS + offset;
       obj.scale = scale;
-      //  * 0.01;
       this.objects_.push(obj);
     }
 
     SpawnCluster_() {
-      const scaleIndex = math.rand_int(0, 1);
       const scale = 0.4;
-      const offset=0;
+      const offset = 0;
 
-        this.SpawnObj_(scale, offset);
-      
+      this.SpawnObj_(scale, offset);
+
     }
 
     MaybeSpawn_() {
@@ -138,16 +124,18 @@ w = (() => {
     }
 
     UpdateScore_(timeElapsed) {
-      this.score_ += timeElapsed * 10.0;
+      if (playerMovementSpeed > 0) {
+        this.score += timeElapsed * playerMovementSpeed;
+      }
 
-      const scoreText = Math.round(this.score_).toLocaleString(
-          'en-US', {minimumIntegerDigits: 5, useGrouping: false});
+      const scoreText = Math.round(this.score).toLocaleString(
+        'en-US', { minimumIntegerDigits: 5, useGrouping: false });
 
       if (scoreText == this.scoreText_) {
         return;
       }
 
-    //   document.getElementById('score-text').innerText = scoreText;
+      document.getElementById('score-text').innerText = scoreText;
     }
 
     UpdateColliders_(timeElapsed) {
@@ -155,9 +143,9 @@ w = (() => {
       const visible = [];
 
       for (let obj of this.objects_) {
-        obj.position.x -= timeElapsed * this.speed_;
+        obj.position.x -= timeElapsed * playerMovementSpeed;
 
-        if (obj.position.x < -20) {
+        if (obj.position.x < -100) {
           invisible.push(obj);
           obj.mesh.visible = false;
         } else {
@@ -173,6 +161,6 @@ w = (() => {
   };
 
   return {
-      WorldManager: WorldManager,
+    WorldManager: WorldManager,
   };
 })();
