@@ -90,7 +90,7 @@ b = (() => {
       this.parallaxEffectInfluence = 0;
 
       var random_z_left = math.rand_range(-250, -20);
-      var random_z_right = math.rand_range(15, 250);
+      var random_z_right = math.rand_range(25, 250);
 
       this.position_.x = math.rand_range(0, 500);
       this.position_.z = Math.random();

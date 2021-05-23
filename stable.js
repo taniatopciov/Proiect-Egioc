@@ -46,7 +46,5 @@ class Stable {
         }
 
         this.mesh.position.copy(this.position);
-        // this.mesh.quaternion.copy(this.quaternion_);
-        // this.mesh.scale.setScalar(this.scale_);
     }
 }

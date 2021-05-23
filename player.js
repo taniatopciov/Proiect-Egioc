@@ -30,8 +30,7 @@ p = (() => {
 
         this.isRunning = false;
 
-        //AICI O VIATA 
-        this.lives = 1;
+        this.lives = 5;
         this.updateLivesText();
         this.grassSound;
 
@@ -237,6 +236,7 @@ p = (() => {
 
       playerMovementSpeed = 18;
       this.playAnimation("Walk", 8);
+
       // playerMovementSpeed = 12;
       // this.playAnimation("Walk", 6);
 

@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Chela+One&display=swap");
+
 body {
   width: 100%;
   height: 100%;
@@ -63,15 +65,15 @@ body {
 }
 
 .game-over-text {
-  font-size: 4em;
+  font-size: 3.5em;
   color: white;
   text-shadow: 6px 6px black;
 }
 
 .game-over-score {
-  font-size: 3em;
+  font-size: 2.5em;
   margin-top: 32px;
-  color: #f0ff01;
+  color: #f5a300;
   text-shadow: 5px 5px black;
 }
 
@@ -82,7 +84,9 @@ body {
 
 .start-game-class {
   opacity: 1;
-  background-color: black;
+  background-color: #19331b;
+  /* background-image: url("./resources/grass/calut.png");
+  background-size: cover; */
 }
 
 .start-game-class.active {
@@ -92,8 +96,8 @@ body {
   z-index: 0;
 }
 
-#start-button {
-  background-color: #f0ff01;
+.styled-button {
+  background-color: #f5a300;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -103,20 +107,32 @@ body {
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+  border-radius: 6px;
+  font-size: 20px;
+  font-family: "Fredericka the Great";
+  color: white;
+  margin-top: 32px;
+}
+
+.styled-button:hover {
+  background-color: #b47800;
+}
+
+#start-button {
   z-index: 10;
 }
 
 .start-game-text {
-  font-size: 4em;
+  font-size: 3.5em;
   color: white;
   text-shadow: 6px 6px black;
 }
 
 .score-text {
-  margin-top: 1.5em;
+  margin-top: 0.5em;
   font-size: 2.5em;
   color: white;
-  padding: 2em;
+  margin-right: 10em;
   text-shadow: 2px 2px black;
 }
 
@@ -128,10 +144,10 @@ body {
 }
 
 .lives-text {
-  margin-top: 1.5em;
+  margin-top: 0.5em;
   font-size: 2.5em;
   color: white;
-  padding: 2em;
+  margin-left: 10em;
   text-shadow: 2px 2px black;
 }
 

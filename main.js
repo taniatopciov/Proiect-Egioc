@@ -43,13 +43,7 @@ document.addEventListener("keydown", event => {
     }
 });
 
-camera.position.set(-10, 8, 15);
-
-// camera.position.set(-10, 8, -30);
-// camera.lookAt(8, 0, 15);
-
-// camera.position.set(-15, 10, 50);
-// camera.lookAt(8, 0 , 0);
+camera.position.set(-8, 10, 12);
 
 controls.update();
 document.getElementById("controls-disabled").style.display = !this.controls.enabled ? "flex" : "none";
@@ -71,7 +65,7 @@ light.shadow.camera.top = 50;
 light.shadow.camera.bottom = -50;
 scene.add(light);
 
-light = new THREE.AmbientLight(0x404040, 0.4); // soft white light
+light = new THREE.AmbientLight(0x404040, 0.4); 
 scene.add(light);
 
 scene.background = new THREE.Color(0x0077FF);
@@ -197,8 +191,6 @@ document.getElementById("start-button").onclick = function() {
 
 var gameOver = false;
 
-// camera.position.z = 5;
-
 var deltaTime = 0;
 var lastTime = 0;
 
@@ -250,13 +242,7 @@ function startGame() {
 
     background = new b.Background({ scene: scene });
 
-    // gameStarted = true;
-
-    // setTimeout(() => {
-        gameStarted = false;
-        // controls.enabled = false;
-    // }, 100);
-
+    gameStarted = false;
 
     playSound('./resources/audio/bensound-sunny.mp3', true, 0.2)
 }
